@@ -9,13 +9,14 @@
         <button type="submit">Save</button>
         </form>
 
-        <ul>
-        <li v-for="agent in agents" :key="agent.id">
-            {{ agent.firstName }} {{ agent.lastName }} ({{ agent.email }})
-            <button @click="editAgent(agent)">Edit</button>
-            <button @click="handleDelete(agent.id)">Delete</button>
-        </li>
-        </ul>
+        <BaseTable
+            :data="agents"
+            :columns="agentColumns"
+            show-actions
+            @edit="editAgent"
+            @delete="handleDelete"
+        />
+
     </div>
 </template>
 
@@ -23,6 +24,16 @@
 import { ref, onMounted } from "vue";
 import type { Agent } from "../../interface/interfaces";
 import { getAgents, upsertAgent, deleteAgent } from "../../api/agent";
+
+import BaseTable from "../base/BaseTable.vue";
+
+// ----- Table Columns -----
+const agentColumns = [
+    { key: "firstName", label: "First Name" },
+    { key: "lastName", label: "Last Name" },
+    { key: "email", label: "Email" },
+    { key: "mobileNumber", label: "Mobile Number" },
+];
 
 // ----- State -----
 const form = ref<Partial<Agent>>({});

@@ -9,13 +9,14 @@
         <button type="submit">Save</button>
         </form>
 
-        <ul>
-        <li v-for="note in notes" :key="note.id">
-            {{ note.type }} - {{ note.content }} - Agent: {{ note.agentId }} Property: {{ note.propertyId || "-" }}
-            <button @click="editNote(note)">Edit</button>
-            <button @click="handleDelete(note.id)">Delete</button>
-        </li>
-        </ul>
+        <BaseTable
+            :data="notes"
+            :columns="noteColumns"
+            show-actions
+            @edit="editNote"
+            @delete="handleDelete"
+        />
+        
     </div>
 </template>
 
@@ -23,6 +24,16 @@
 import { ref, onMounted } from "vue";
 import type { Note } from "../../interface/interfaces";
 import { getNotes, upsertNote, deleteNote } from "../../api/note";
+
+import BaseTable from "../base/BaseTable.vue";
+
+// ----- Table Columns -----
+const noteColumns = [
+    { key: "content", label: "Content" },
+    { key: "agentId", label: "Agent ID" },
+    { key: "propertyId", label: "Property ID" },
+];
+
 
 const form = ref<Partial<Note>>({});
 const notes = ref<Note[]>([]);

@@ -10,13 +10,14 @@
         <button type="submit">Save</button>
         </form>
 
-        <ul>
-        <li v-for="tenant in tenants" :key="tenant.id">
-            {{ tenant.firstName }} {{ tenant.lastName }} - Property: {{ tenant.propertyId }}
-            <button @click="editTenant(tenant)">Edit</button>
-            <button @click="handleDelete(tenant.id)">Delete</button>
-        </li>
-        </ul>
+        <BaseTable
+            :data="tenants"
+            :columns="tenantColumns"
+            show-actions
+            @edit="editTenant"
+            @delete="handleDelete"
+        />
+
     </div>
 </template>
 
@@ -24,6 +25,16 @@
 import { ref, onMounted } from "vue";
 import type { Tenant } from "../../interface/interfaces";
 import { getTenants, upsertTenant, deleteTenant } from "../../api/tenant";
+
+import BaseTable from "../base/BaseTable.vue";
+
+// ----- Table Columns -----
+const tenantColumns = [
+    { key: "firstName", label: "First Name" },
+    { key: "lastName", label: "Last Name" },
+    { key: "propertyId", label: "Property ID" },
+    { key: "familyId", label: "Family ID" },
+];
 
 const form = ref<Partial<Tenant>>({});
 const tenants = ref<Tenant[]>([]);

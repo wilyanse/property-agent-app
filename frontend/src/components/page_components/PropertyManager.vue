@@ -1,22 +1,23 @@
 <template>
-  <div>
-    <h2>Properties</h2>
+    <div>
+        <h2>Properties</h2>
 
-    <form @submit.prevent="submitProperty">
-      <input v-model="form.name" placeholder="Property Name" required />
-      <input v-model="form.address" placeholder="Address" required />
-      <input v-model="form.agentId" placeholder="Agent ID" required />
-      <button type="submit">Save</button>
-    </form>
+        <form @submit.prevent="submitProperty">
+        <input v-model="form.name" placeholder="Property Name" required />
+        <input v-model="form.address" placeholder="Address" required />
+        <input v-model="form.agentId" placeholder="Agent ID" required />
+        <button type="submit">Save</button>
+        </form>
 
-    <ul>
-      <li v-for="prop in properties" :key="prop.id">
-        {{ prop.name }} - {{ prop.address }} - Agent: {{ prop.agentId }}
-        <button @click="editProperty(prop)">Edit</button>
-        <button @click="handleDelete(prop.id)">Delete</button>
-      </li>
-    </ul>
-  </div>
+        <BaseTable
+            :data="properties"
+            :columns="propertyColumns"
+            show-actions
+            @edit="editProperty"
+            @delete="handleDelete"
+        />
+
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -27,6 +28,15 @@ import { getProperties, upsertProperty, deleteProperty } from "../../api/propert
 const form = ref<Partial<Property>>({});
 const properties = ref<Property[]>([]);
 const loading = ref(false);
+
+import BaseTable from "../base/BaseTable.vue";
+
+// ----- Table Columns -----
+const propertyColumns = [
+    { key: "name", label: "Property Name" },
+    { key: "address", label: "Address" },
+    { key: "agentId", label: "Agent ID" },
+];
 
 const fetchProperties = async () => {
     loading.value = true;
@@ -63,4 +73,10 @@ const editProperty = (prop: Property) => {
 };
 
 onMounted(() => fetchProperties());
+</script>
+
+// bypass Vetur lint error
+<script lang="ts">
+    import { defineComponent } from "vue";
+    export default defineComponent({});
 </script>
