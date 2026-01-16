@@ -17,7 +17,6 @@
             @delete="handleDelete"
         />
 
-
         <EditModal
             :title="'Edit Property'"
             :fields="propertyColumns"
@@ -26,7 +25,6 @@
             :onSubmit="submitEditModal"
         />
         
-
     </div>
 </template>
 
@@ -95,17 +93,13 @@ const editProperty = (prop: Property) => {
     editModalVisible.value = true;
 };
 
-const submitEditModal = async (updatedData: Partial<Note>) => {
+const submitEditModal = async (updatedData: Partial<Property>) => {
   try {
-    if (!updatedData.firstName || !updatedData.lastName) {
-      return;
-    }
-
     loading.value = true;
-    await upsertNote(updatedData);
+    await upsertProperty(updatedData);
     form.value = {}; // reset form
     editModalVisible.value = false; // close modal
-    await fetchNotes(); // refresh table
+    await fetchProperties(); // refresh table
   } catch (err: unknown) {
     alert(getErrorMessage(err));
   } finally {

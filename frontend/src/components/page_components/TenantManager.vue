@@ -96,17 +96,13 @@ const editTenant = (tenant: Tenant) => {
     editModalVisible.value = true;
 };
 
-const submitEditModal = async (updatedData: Partial<Note>) => {
+const submitEditModal = async (updatedData: Partial<Tenant>) => {
   try {
-    if (!updatedData.firstName || !updatedData.lastName) {
-      return;
-    }
-
     loading.value = true;
-    await upsertNote(updatedData);
+    await upsertTenant(updatedData);
     form.value = {}; // reset form
     editModalVisible.value = false; // close modal
-    await fetchNotes(); // refresh table
+    await fetchTenants(); // refresh table
   } catch (err: unknown) {
     alert(getErrorMessage(err));
   } finally {

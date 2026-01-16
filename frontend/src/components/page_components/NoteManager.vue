@@ -96,10 +96,6 @@ const editNote = (note: Note) => {
 
 const submitEditModal = async (updatedData: Partial<Note>) => {
   try {
-    if (!updatedData.firstName || !updatedData.lastName) {
-      return;
-    }
-
     loading.value = true;
     await upsertNote(updatedData);
     form.value = {}; // reset form
