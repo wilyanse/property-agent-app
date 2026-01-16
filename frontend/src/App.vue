@@ -14,10 +14,32 @@ const activeView = ref<View>("agents")
 <template>
   <div class="layout">
     <aside class="sidebar">
-        <h3 @click="activeView = 'agents'">Agents</h3>
-        <h3 @click="activeView = 'properties'">Properties</h3>
-        <h3 @click="activeView = 'tenants'">Tenants</h3>
-        <h3 @click="activeView = 'notes'">Notes</h3>
+      <ul class="menu">
+        <li
+          class="menu-item"
+          @click="activeView = 'agents'"
+        >
+          Agents
+        </li>
+        <li
+          class="menu-item"
+          @click="activeView = 'properties'"
+        >
+          Properties
+        </li>
+        <li
+          class="menu-item"
+          @click="activeView = 'tenants'"
+        >
+          Tenants
+        </li>
+        <li
+          class="menu-item"
+          @click="activeView = 'notes'"
+        >
+          Notes
+        </li>
+      </ul>
     </aside>
 
     <main class="content">
@@ -39,21 +61,24 @@ const activeView = ref<View>("agents")
   width: 220px;
   background: #1f2937;
   color: white;
-  padding: 16px;
+  padding: 0;
 }
 
-.sidebar li {
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-item {
+  width: 100%;
+  padding: 12px 16px;
   cursor: pointer;
-  padding: 8px;
-  margin-bottom: 4px;
+  box-sizing: border-box;
 }
 
-.sidebar li:hover {
+.menu-item:hover {
   background: #374151;
 }
 
-.content {
-  flex: 1;
-  padding: 16px;
-}
 </style>
