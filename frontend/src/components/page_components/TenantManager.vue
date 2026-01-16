@@ -65,7 +65,6 @@ const submitTenant = async () => {
 };
 
 const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure?")) return;
     await deleteTenant(id);
     await fetchTenants();
 };

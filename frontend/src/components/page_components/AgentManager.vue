@@ -85,13 +85,9 @@ const submitAgent = async () => {
 
 // ----- Delete agent -----
 const handleDelete = async (id: string) => {
-    const confirmDelete = confirm("Are you sure you want to delete this agent?");
-    if (!confirmDelete) return;
-
     try {
         loading.value = true;
         await deleteAgent(id);
-        alert("Deleted successfully!");
         await fetchAgents();
     } catch (err: unknown) {
         alert(getErrorMessage(err));

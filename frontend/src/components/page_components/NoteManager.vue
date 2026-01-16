@@ -64,7 +64,6 @@ const submitNote = async () => {
 };
 
 const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure?")) return;
     await deleteNote(id);
     await fetchNotes();
 };
