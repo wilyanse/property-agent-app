@@ -1,6 +1,9 @@
 // app.ts
 import express from "express";
 import agentRoutes from "./routes/agent.routes";
+import propertyRoutes from "./routes/property.routes";
+import tenantRoutes from "./routes/tenant.routes";
+import noteRoutes from "./routes/note.routes";
 import cors from "cors";
 
 
@@ -14,6 +17,9 @@ app.use(cors({
 
 app.use(express.json());
 app.use("/agents", agentRoutes);
+app.use("/properties", propertyRoutes);
+app.use("/tenants", tenantRoutes);
+app.use("/notes", noteRoutes);
 
 // health check to see if server is up and running
 app.get("/health", (_req, res) => {
