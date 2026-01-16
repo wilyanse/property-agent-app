@@ -8,118 +8,212 @@
 	},
 	"item": [
 		{
-			"name": "Create Agent",
-			"event": [
+			"name": "Agent",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"// Parse the JSON response",
-							"const jsonData = pm.response.json();",
-							"",
-							"// Test 1: Verify response has JSON and an 'id' property",
-							"pm.test(\"Response has 'id' property\", function () {",
-							"    pm.expect(jsonData).to.be.an('object');",
-							"    pm.expect(jsonData).to.have.property('id');",
-							"});",
-							"",
-							"// Set the collection variable 'agent_id' to the id value",
-							"pm.collectionVariables.set(\"agent_id\", jsonData.id);",
-							"",
-							"// Test 2: Confirm the collection variable was set correctly",
-							"pm.test(\"Collection variable 'agent_id' was set\", function () {",
-							"    const savedId = pm.collectionVariables.get(\"agent_id\");",
-							"    pm.expect(savedId).to.eql(jsonData.id);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {},
-						"requests": {}
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"firstName\": \"Will\",\n    \"lastName\": \"Jose\",\n    \"email\": \"willjose51@gmail.com\",\n    \"mobileNumber\": \"+639391986763\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{backend}}/agents",
-					"host": [
-						"{{backend}}"
-					],
-					"path": [
-						"agents"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get All Agents",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{backend}}/agents",
-					"host": [
-						"{{backend}}"
-					],
-					"path": [
-						"agents"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Agent By ID",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{backend}}/agents/?id=90016d38-f5bc-423d-b4b2-5b9826a18a8b",
-					"host": [
-						"{{backend}}"
-					],
-					"path": [
-						"agents",
-						""
-					],
-					"query": [
+					"name": "Create Agent",
+					"event": [
 						{
-							"key": "id",
-							"value": "90016d38-f5bc-423d-b4b2-5b9826a18a8b"
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the JSON response",
+									"const jsonData = pm.response.json();",
+									"",
+									"// Test 1: Verify response has JSON and an 'id' property",
+									"pm.test(\"Response has 'id' property\", function () {",
+									"    pm.expect(jsonData).to.be.an('object');",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"});",
+									"",
+									"// Set the collection variable 'agent_id' to the id value",
+									"pm.collectionVariables.set(\"agent_id\", jsonData.id);",
+									"",
+									"// Test 2: Confirm the collection variable was set correctly",
+									"pm.test(\"Collection variable 'agent_id' was set\", function () {",
+									"    const savedId = pm.collectionVariables.get(\"agent_id\");",
+									"    pm.expect(savedId).to.eql(jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
 						}
-					]
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Will\",\n    \"lastName\": \"Jose\",\n    \"email\": \"willjose51@gmail.com\",\n    \"mobileNumber\": \"+639391986763\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend}}/agents",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"agents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Agents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/agents",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"agents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Agent By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/agents/{{agent_id}}",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"agents",
+								"{{agent_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Agent",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/agents/{{agent_id}}",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"agents",
+								"{{agent_id}}"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Delete Agent",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{backend}}/agents/{{agent_id}}",
-					"host": [
-						"{{backend}}"
+			"name": "Property",
+			"item": [
+				{
+					"name": "Create property",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the JSON response",
+									"const jsonData = pm.response.json();",
+									"",
+									"// Test 1: Verify response has JSON and an 'id' property",
+									"pm.test(\"Response has 'id' property\", function () {",
+									"    pm.expect(jsonData).to.be.an('object');",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"});",
+									"",
+									"// Set the collection variable 'property_id' to the id value",
+									"pm.collectionVariables.set(\"property_id\", jsonData.id);",
+									"",
+									"// Test 2: Confirm the collection variable was set correctly",
+									"pm.test(\"Collection variable 'property_id' was set\", function () {",
+									"    const savedId = pm.collectionVariables.get(\"property_id\");",
+									"    pm.expect(savedId).to.eql(jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
 					],
-					"path": [
-						"agents",
-						"{{agent_id}}"
-					]
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"House2 12\",\n    \"address\": \"Across the street\",\n    \"agentId\": \"{{agent_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{backend}}/properties",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"properties"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Properties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/properties",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"properties"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get property by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{backend}}/properties/{{property_id}}",
+							"host": [
+								"{{backend}}"
+							],
+							"path": [
+								"properties",
+								"{{property_id}}"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	],
 	"event": [
@@ -153,6 +247,22 @@
 		},
 		{
 			"key": "agent_id",
+			"value": ""
+		},
+		{
+			"key": "property_id",
+			"value": ""
+		},
+		{
+			"key": "tenant_id",
+			"value": ""
+		},
+		{
+			"key": "family_id",
+			"value": ""
+		},
+		{
+			"key": "note_id",
 			"value": ""
 		}
 	]
