@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Property Agents</h1>
+        <h2>Property Agents</h2>
         <form @submit.prevent="submitAgent">
         <input v-model="form.firstName" placeholder="First Name" required />
         <input v-model="form.lastName" placeholder="Last Name" required />
@@ -15,6 +15,7 @@
             show-actions
             @edit="editAgent"
             @delete="handleDelete"
+            @row-click="viewAgent"
         />
 
         <EditModal
@@ -25,16 +26,25 @@
             :onSubmit="submitEditModal"
         />
 
+        <ViewModal
+            title="Agent Details"
+            v-model:visible="viewModalVisible"
+            :loading="viewLoading"
+            :fields="agentColumns"
+            :data="selectedAgent"
+        />
+
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import type { Agent } from "../../interface/interfaces";
-import { getAgents, upsertAgent, deleteAgent } from "../../api/agent";
+import { getAgents, upsertAgent, deleteAgent, getAgentById } from "../../api/agent";
 
 import BaseTable from "../base/BaseTable.vue";
 import EditModal from "../base/EditModal.vue";
+import ViewModal from "../base/ViewModal.vue";
 
 // ----- Table Columns -----
 const agentColumns = [
@@ -49,6 +59,10 @@ const form = ref<Partial<Agent>>({});
 const agents = ref<Agent[]>([]);
 const loading = ref(false);
 const editModalVisible = ref(false);
+const viewModalVisible = ref(false)
+const viewLoading = ref(false)
+const selectedAgent = ref<Agent | null>(null)
+
 
 // ----- Utilities -----
 const getErrorMessage = (err: unknown): string => {
@@ -72,6 +86,22 @@ const fetchAgents = async () => {
         loading.value = false;
     }
 };
+
+const viewAgent = async (agent: Agent) => {
+  try {
+    viewModalVisible.value = true
+    viewLoading.value = true
+
+    // Fetch full details
+    selectedAgent.value = await getAgentById(agent.id)
+  } catch (err) {
+    alert(getErrorMessage(err))
+    viewModalVisible.value = false
+  } finally {
+    viewLoading.value = false
+  }
+}
+
 
 // ----- Create / Update agent -----
 const submitAgent = async () => {

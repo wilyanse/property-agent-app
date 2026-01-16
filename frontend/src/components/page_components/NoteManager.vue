@@ -15,6 +15,7 @@
             show-actions
             @edit="editNote"
             @delete="handleDelete"
+            @row-click="viewNote"
         />
 
         <EditModal
@@ -25,16 +26,25 @@
             :onSubmit="submitEditModal"
         />
         
+        <ViewModal
+            title="Agent Details"
+            v-model:visible="viewModalVisible"
+            :loading="viewLoading"
+            :fields="noteColumns"
+            :data="selectedNote"
+        />
+
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import type { Note } from "../../interface/interfaces";
-import { getNotes, upsertNote, deleteNote } from "../../api/note";
+import { getNotes, upsertNote, deleteNote, getNoteById } from "../../api/note";
 
 import BaseTable from "../base/BaseTable.vue";
 import EditModal from "../base/EditModal.vue";
+import ViewModal from "../base/ViewModal.vue";
 
 // ----- Table Columns -----
 const noteColumns = [
@@ -48,6 +58,10 @@ const form = ref<Partial<Note>>({});
 const notes = ref<Note[]>([]);
 const loading = ref(false);
 const editModalVisible = ref(false);
+const viewModalVisible = ref(false)
+const viewLoading = ref(false)
+const selectedNote = ref<Note | null>(null)
+
 
 // ----- Utilities -----
 const getErrorMessage = (err: unknown): string => {
@@ -68,6 +82,23 @@ const fetchNotes = async () => {
         loading.value = false;
     }
 };
+
+
+const viewNote = async (note: Note) => {
+  try {
+    viewModalVisible.value = true
+    viewLoading.value = true
+
+    // Fetch full details
+    selectedNote.value = await getNoteById(note.id)
+  } catch (err) {
+    alert(getErrorMessage(err))
+    viewModalVisible.value = false
+  } finally {
+    viewLoading.value = false
+  }
+}
+
 
 const submitNote = async () => {
     if (!form.value.content || !form.value.agentId) {

@@ -25,3 +25,8 @@ export const upsertProperty = async (property: Partial<Property>): Promise<Prope
 export const deleteProperty = async (id: string): Promise<void> => {
     await fetch(`${API}/${id}`, { method: "DELETE" });
 };
+
+export const getPropertyById = async (id: string): Promise<Property> => {
+    const res = await fetch(`${API}/${id}`);
+    return res.json();
+}

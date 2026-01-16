@@ -8,11 +8,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in data" :key="row.id">
+        <tr
+          v-for="row in data"
+          :key="row.id"
+          @click="$emit('row-click', row)"
+          style="cursor: pointer"
+        >
           <td v-for="col in columns" :key="col.key">
             {{ getValue(row, col.key) }}
           </td>
-          <td v-if="showActions">
+          <td v-if="showActions" @click.stop>
             <button @click="$emit('edit', row)">Edit</button>
             <button @click="$emit('delete', row.id)">Delete</button>
           </td>
@@ -25,6 +30,7 @@
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 import { defineComponent } from "vue";

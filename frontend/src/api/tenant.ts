@@ -25,3 +25,8 @@ export const upsertTenant = async (tenant: Partial<Tenant>): Promise<Tenant> => 
 export const deleteTenant = async (id: string): Promise<void> => {
     await fetch(`${API}/${id}`, { method: "DELETE" });
 };
+
+export const getTenantById = async (id: string): Promise<Tenant> => {
+    const res = await fetch(`${API}/${id}`);
+    return res.json();
+}

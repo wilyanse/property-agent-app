@@ -30,3 +30,8 @@ export const upsertNote = async (note: Partial<Note>): Promise<Note> => {
 export const deleteNote = async (id: string): Promise<void> => {
     await fetch(`${API}/${id}`, { method: "DELETE" });
 };
+
+export const getNoteById = async (id: string): Promise<Note> => {
+    const res = await fetch(`${API}/${id}`);
+    return res.json();
+};

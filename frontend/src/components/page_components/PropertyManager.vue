@@ -15,6 +15,7 @@
             show-actions
             @edit="editProperty"
             @delete="handleDelete"
+            @row-click="viewProperty"
         />
 
         <EditModal
@@ -24,6 +25,14 @@
             :modelValue="form"
             :onSubmit="submitEditModal"
         />
+
+        <ViewModal
+            title="Agent Details"
+            v-model:visible="viewModalVisible"
+            :loading="viewLoading"
+            :fields="propertyColumns"
+            :data="selectedProperty"
+        />
         
     </div>
 </template>
@@ -31,15 +40,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import type { Property } from "../../interface/interfaces";
-import { getProperties, upsertProperty, deleteProperty } from "../../api/property";
+import { getProperties, upsertProperty, deleteProperty, getPropertyById } from "../../api/property";
 
 import BaseTable from "../base/BaseTable.vue";
 import EditModal from "../base/EditModal.vue";
+import ViewModal from "../base/ViewModal.vue";
 
 const form = ref<Partial<Property>>({});
 const properties = ref<Property[]>([]);
 const loading = ref(false);
 const editModalVisible = ref(false);
+const viewModalVisible = ref(false)
+const viewLoading = ref(false)
+const selectedProperty = ref<Property | null>(null)
 
 // ----- Utilities -----
 const getErrorMessage = (err: unknown): string => {
@@ -67,6 +80,21 @@ const fetchProperties = async () => {
         loading.value = false;
     }
 };
+
+const viewProperty = async (property: Property) => {
+  try {
+    viewModalVisible.value = true
+    viewLoading.value = true
+
+    // Fetch full details
+    selectedProperty.value = await getPropertyById(property.id)
+  } catch (err) {
+    alert(getErrorMessage(err))
+    viewModalVisible.value = false
+  } finally {
+    viewLoading.value = false
+  }
+}
 
 const submitProperty = async () => {
     if (!form.value.name || !form.value.address || !form.value.agentId) {

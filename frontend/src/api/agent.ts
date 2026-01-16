@@ -40,3 +40,15 @@ export const deleteAgent = async (id: string): Promise<void> => {
     throw new Error(error.message || "Failed to delete agent");
   }
 };
+
+/**
+ * Get agent by ID
+ */
+export const getAgentById = async (id: string): Promise<Agent> => {
+  const res = await fetch(`${API_URL}/${id}`)
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.message || "Failed to delete agent");
+  }
+  return res.json();
+};

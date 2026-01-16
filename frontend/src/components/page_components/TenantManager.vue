@@ -16,6 +16,7 @@
             show-actions
             @edit="editTenant"
             @delete="handleDelete"
+            @row-click="viewTenant"
         />
 
         <EditModal
@@ -26,17 +27,25 @@
             :onSubmit="submitEditModal"
         />
 
+        <ViewModal
+            title="Tenant Details"
+            v-model:visible="viewModalVisible"
+            :loading="viewLoading"
+            :fields="tenantColumns"
+            :data="selectedTenant"
+        />
+
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import type { Tenant } from "../../interface/interfaces";
-import { getTenants, upsertTenant, deleteTenant } from "../../api/tenant";
+import { getTenants, upsertTenant, deleteTenant, getTenantById } from "../../api/tenant";
 
 import BaseTable from "../base/BaseTable.vue";
 import EditModal from "../base/EditModal.vue";
-
+import ViewModal from "../base/ViewModal.vue";
 
 // ----- Table Columns -----
 const tenantColumns = [
@@ -50,6 +59,9 @@ const form = ref<Partial<Tenant>>({});
 const tenants = ref<Tenant[]>([]);
 const loading = ref(false);
 const editModalVisible = ref(false);
+const viewModalVisible = ref(false);
+const viewLoading = ref(false);
+const selectedTenant = ref<Tenant | null>(null);
 
 // ----- Utilities -----
 const getErrorMessage = (err: unknown): string => {
@@ -68,6 +80,21 @@ const fetchTenants = async () => {
         tenants.value = await getTenants();
     } finally {
         loading.value = false;
+    }
+};
+
+const viewTenant = async (tenant: Tenant) => {
+    try {
+        viewModalVisible.value = true
+        viewLoading.value = true;
+
+        // Fetch full details
+        selectedTenant.value = await getTenantById(tenant.id);
+    } catch (err) {
+        alert(getErrorMessage(err));
+        viewModalVisible.value = false;
+    } finally {
+        viewLoading.value = false;
     }
 };
 
@@ -116,5 +143,6 @@ onMounted(() => fetchTenants());
 // bypass Vetur lint error
 <script lang="ts">
     import { defineComponent } from "vue";
+import { i } from "vite/dist/node/chunks/moduleRunnerTransport";
     export default defineComponent({});
 </script>
