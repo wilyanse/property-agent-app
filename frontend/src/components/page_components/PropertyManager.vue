@@ -1,14 +1,31 @@
 <template>
-    <div>
+    <div class="page">
+        <header class="page-header">
         <h2>Properties</h2>
+        </header>
 
-        <form @submit.prevent="submitProperty">
-        <input v-model="form.name" placeholder="Property Name" required />
-        <input v-model="form.address" placeholder="Address" required />
-        <input v-model="form.agentId" placeholder="Agent ID" required />
-        <button type="submit">Save</button>
+        <section class="card">
+        <form class="property-form" @submit.prevent="submitProperty">
+            <input
+            v-model="form.name"
+            placeholder="Property Name"
+            required
+            />
+            <input
+            v-model="form.address"
+            placeholder="Address"
+            required
+            />
+            <input
+            v-model="form.agentId"
+            placeholder="Agent ID"
+            required
+            />
+            <button type="submit" class="primary-btn">Save Property</button>
         </form>
+        </section>
 
+        <section class="table-section">
         <BaseTable
             :data="properties"
             :columns="propertyColumns"
@@ -17,25 +34,26 @@
             @delete="handleDelete"
             @row-click="viewProperty"
         />
+        </section>
 
         <EditModal
-            :title="'Edit Property'"
-            :fields="propertyColumns"
-            v-model:visible="editModalVisible"
-            :modelValue="form"
-            :onSubmit="submitEditModal"
+        title="Edit Property"
+        :fields="propertyColumns"
+        v-model:visible="editModalVisible"
+        :modelValue="form"
+        :onSubmit="submitEditModal"
         />
 
         <ViewModal
-            title="Agent Details"
-            v-model:visible="viewModalVisible"
-            :loading="viewLoading"
-            :fields="propertyColumns"
-            :data="selectedProperty"
+        title="Property Details"
+        v-model:visible="viewModalVisible"
+        :loading="viewLoading"
+        :fields="propertyColumns"
+        :data="selectedProperty"
         />
-        
     </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
@@ -143,3 +161,78 @@ onMounted(() => fetchProperties());
     import { defineComponent } from "vue";
     export default defineComponent({});
 </script>
+
+<style scoped>
+    /* Page wrapper */
+    .page {
+    margin: 0 auto;
+    padding: 24px;
+    background: #e6e6e6; /* soft light gray */
+    min-height: 100vh;
+    }
+
+    /* Header */
+    .page-header {
+    margin-bottom: 20px;
+    }
+
+    .page-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    }
+
+    /* Card form */
+    .card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 28px;
+    }
+
+    /* Form layout */
+    .property-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* two columns for inputs */
+    gap: 14px;
+    }
+
+    .property-form input {
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    }
+
+    .property-form input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 1px #2563eb33;
+    }
+
+    /* Primary button */
+    .primary-btn {
+    grid-column: span 2;
+    margin-top: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    border: none;
+    background: #2563eb;
+    color: #ffffff;
+    cursor: pointer;
+    }
+
+    .primary-btn:hover {
+    background: #1d4ed8;
+    }
+
+    /* Table section spacing */
+    .table-section {
+    margin-top: 12px;
+    }
+
+</style>
