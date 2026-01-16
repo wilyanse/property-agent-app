@@ -1,0 +1,70 @@
+############################
+# Node / JavaScript (ALL)
+############################
+**/node_modules/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+############################
+# Lock files (optional)
+############################
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
+
+############################
+# Environment variables
+############################
+**/.env
+**/.env.*
+!**/.env.example
+
+############################
+# Build outputs
+############################
+backend/dist/
+backend/build/
+frontend/dist/
+frontend/build/
+**/coverage/
+
+############################
+# Vue / Vite
+############################
+frontend/.vite/
+frontend/.cache/
+frontend/.nuxt/
+frontend/.output/
+
+############################
+# Backend (Express)
+############################
+backend/logs/
+backend/*.log
+backend/tmp/
+backend/uploads/
+backend/data/
+
+############################
+# Testing
+############################
+**/.cypress/
+**/playwright-report/
+
+############################
+# OS / Editor
+############################
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+############################
+# Misc
+############################
+*.swp
+*.swo
