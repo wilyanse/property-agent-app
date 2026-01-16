@@ -1,14 +1,30 @@
 <template>
-    <div>
+    <div class="page">
+        <header class="page-header">
         <h2>Notes</h2>
+        </header>
 
-        <form @submit.prevent="submitNote">
-        <textarea v-model="form.content" placeholder="Content" required></textarea>
-        <input v-model="form.agentId" placeholder="Agent ID" required />
-        <input v-model="form.propertyId" placeholder="Property ID (optional)" />
-        <button type="submit">Save</button>
+        <section class="card">
+        <form class="note-form" @submit.prevent="submitNote">
+            <textarea
+            v-model="form.content"
+            placeholder="Content"
+            required
+            ></textarea>
+            <input
+            v-model="form.agentId"
+            placeholder="Agent ID"
+            required
+            />
+            <input
+            v-model="form.propertyId"
+            placeholder="Property ID (optional)"
+            />
+            <button type="submit" class="primary-btn">Save Note</button>
         </form>
+        </section>
 
+        <section class="table-section">
         <BaseTable
             :data="notes"
             :columns="noteColumns"
@@ -17,25 +33,26 @@
             @delete="handleDelete"
             @row-click="viewNote"
         />
+        </section>
 
         <EditModal
-            :title="'Edit Note'"
-            :fields="noteColumns"
-            v-model:visible="editModalVisible"
-            :modelValue="form"
-            :onSubmit="submitEditModal"
-        />
-        
-        <ViewModal
-            title="Agent Details"
-            v-model:visible="viewModalVisible"
-            :loading="viewLoading"
-            :fields="noteColumns"
-            :data="selectedNote"
+        title="Edit Note"
+        :fields="noteColumns"
+        v-model:visible="editModalVisible"
+        :modelValue="form"
+        :onSubmit="submitEditModal"
         />
 
+        <ViewModal
+        title="Note Details"
+        v-model:visible="viewModalVisible"
+        :loading="viewLoading"
+        :fields="noteColumns"
+        :data="selectedNote"
+        />
     </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
@@ -147,3 +164,89 @@ onMounted(() => fetchNotes());
     import { defineComponent } from "vue";
     export default defineComponent({});
 </script>
+
+<style scoped>
+    /* Page wrapper */
+    .page {
+    margin: 0 auto;
+    padding: 24px;
+    background: #e6e6e6; /* soft light gray */
+    min-height: 100vh;
+    }
+
+    /* Header */
+    .page-header {
+    margin-bottom: 20px;
+    }
+
+    .page-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    }
+
+    /* Card form */
+    .card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 28px;
+    }
+
+    /* Form layout */
+    .note-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* two columns for inputs, textarea spans 2 */
+    gap: 14px;
+    }
+
+    .note-form textarea {
+    grid-column: span 2;
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    resize: vertical;
+    min-height: 60px;
+    }
+
+    .note-form textarea:focus,
+    .note-form input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 1px #2563eb33;
+    }
+
+    .note-form input {
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    }
+
+    /* Primary button */
+    .primary-btn {
+    grid-column: span 2;
+    margin-top: 6px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    border: none;
+    background: #2563eb;
+    color: #ffffff;
+    cursor: pointer;
+    }
+
+    .primary-btn:hover {
+    background: #1d4ed8;
+    }
+
+    /* Table section spacing */
+    .table-section {
+    margin-top: 12px;
+    }
+
+</style>
