@@ -17,6 +17,16 @@
             @delete="handleDelete"
         />
 
+
+        <EditModal
+            :title="'Edit Property'"
+            :fields="propertyColumns"
+            v-model:visible="editModalVisible"
+            :modelValue="form"
+            :onSubmit="submitEditModal"
+        />
+        
+
     </div>
 </template>
 
@@ -25,11 +35,24 @@ import { ref, onMounted } from "vue";
 import type { Property } from "../../interface/interfaces";
 import { getProperties, upsertProperty, deleteProperty } from "../../api/property";
 
+import BaseTable from "../base/BaseTable.vue";
+import EditModal from "../base/EditModal.vue";
+
 const form = ref<Partial<Property>>({});
 const properties = ref<Property[]>([]);
 const loading = ref(false);
+const editModalVisible = ref(false);
 
-import BaseTable from "../base/BaseTable.vue";
+// ----- Utilities -----
+const getErrorMessage = (err: unknown): string => {
+    if (err instanceof Error) return err.message;
+    if (typeof err === "string") return err;
+    try {
+        return JSON.stringify(err);
+    } catch {
+        return String(err);
+    }
+};
 
 // ----- Table Columns -----
 const propertyColumns = [
@@ -69,6 +92,25 @@ const handleDelete = async (id: string) => {
 
 const editProperty = (prop: Property) => {
     form.value = { ...prop };
+    editModalVisible.value = true;
+};
+
+const submitEditModal = async (updatedData: Partial<Note>) => {
+  try {
+    if (!updatedData.firstName || !updatedData.lastName) {
+      return;
+    }
+
+    loading.value = true;
+    await upsertNote(updatedData);
+    form.value = {}; // reset form
+    editModalVisible.value = false; // close modal
+    await fetchNotes(); // refresh table
+  } catch (err: unknown) {
+    alert(getErrorMessage(err));
+  } finally {
+    loading.value = false;
+  }
 };
 
 onMounted(() => fetchProperties());

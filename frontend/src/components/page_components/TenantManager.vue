@@ -18,6 +18,14 @@
             @delete="handleDelete"
         />
 
+        <EditModal
+            :title="'Edit Tenant'"
+            :fields="tenantColumns"
+            v-model:visible="editModalVisible"
+            :modelValue="form"
+            :onSubmit="submitEditModal"
+        />
+
     </div>
 </template>
 
@@ -27,6 +35,8 @@ import type { Tenant } from "../../interface/interfaces";
 import { getTenants, upsertTenant, deleteTenant } from "../../api/tenant";
 
 import BaseTable from "../base/BaseTable.vue";
+import EditModal from "../base/EditModal.vue";
+
 
 // ----- Table Columns -----
 const tenantColumns = [
@@ -39,6 +49,18 @@ const tenantColumns = [
 const form = ref<Partial<Tenant>>({});
 const tenants = ref<Tenant[]>([]);
 const loading = ref(false);
+const editModalVisible = ref(false);
+
+// ----- Utilities -----
+const getErrorMessage = (err: unknown): string => {
+    if (err instanceof Error) return err.message;
+    if (typeof err === "string") return err;
+    try {
+        return JSON.stringify(err);
+    } catch {
+        return String(err);
+    }
+};
 
 const fetchTenants = async () => {
     loading.value = true;
@@ -71,6 +93,25 @@ const handleDelete = async (id: string) => {
 
 const editTenant = (tenant: Tenant) => {
     form.value = { ...tenant };
+    editModalVisible.value = true;
+};
+
+const submitEditModal = async (updatedData: Partial<Note>) => {
+  try {
+    if (!updatedData.firstName || !updatedData.lastName) {
+      return;
+    }
+
+    loading.value = true;
+    await upsertNote(updatedData);
+    form.value = {}; // reset form
+    editModalVisible.value = false; // close modal
+    await fetchNotes(); // refresh table
+  } catch (err: unknown) {
+    alert(getErrorMessage(err));
+  } finally {
+    loading.value = false;
+  }
 };
 
 onMounted(() => fetchTenants());

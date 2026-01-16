@@ -17,6 +17,14 @@
             @delete="handleDelete"
         />
 
+        <EditModal
+            :title="'Edit Agent'"
+            :fields="agentColumns"
+            v-model:visible="editModalVisible"
+            :modelValue="form"
+            :onSubmit="submitEditModal"
+        />
+
     </div>
 </template>
 
@@ -26,6 +34,7 @@ import type { Agent } from "../../interface/interfaces";
 import { getAgents, upsertAgent, deleteAgent } from "../../api/agent";
 
 import BaseTable from "../base/BaseTable.vue";
+import EditModal from "../base/EditModal.vue";
 
 // ----- Table Columns -----
 const agentColumns = [
@@ -39,6 +48,7 @@ const agentColumns = [
 const form = ref<Partial<Agent>>({});
 const agents = ref<Agent[]>([]);
 const loading = ref(false);
+const editModalVisible = ref(false);
 
 // ----- Utilities -----
 const getErrorMessage = (err: unknown): string => {
@@ -73,7 +83,6 @@ const submitAgent = async () => {
 
         loading.value = true;
         await upsertAgent(form.value);
-        alert("Agent saved successfully!");
         form.value = {};
         await fetchAgents(); // refresh list after save
     } catch (err: unknown) {
@@ -98,7 +107,26 @@ const handleDelete = async (id: string) => {
 
 // ----- Edit agent -----
 const editAgent = (agent: Agent) => {
-  form.value = { ...agent };
+    form.value = { ...agent };
+    editModalVisible.value = true;
+};
+
+const submitEditModal = async (updatedData: Partial<Agent>) => {
+  try {
+    if (!updatedData.firstName || !updatedData.lastName) {
+      return;
+    }
+
+    loading.value = true;
+    await upsertAgent(updatedData);
+    form.value = {}; // reset form
+    editModalVisible.value = false; // close modal
+    await fetchAgents(); // refresh table
+  } catch (err: unknown) {
+    alert(getErrorMessage(err));
+  } finally {
+    loading.value = false;
+  }
 };
 
 // ----- On mount -----
