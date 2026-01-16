@@ -15,7 +15,7 @@ const activeView = ref<View>("agents")
   <div class="layout">
     <aside class="sidebar">
       <div class="sidebar-header">
-        Property Management App
+        Property Management
       </div>
 
       <ul class="menu">
@@ -115,6 +115,10 @@ const activeView = ref<View>("agents")
   background: #e5e7eb;
   color: #111827;
   font-weight: 500;
+}
+
+.content {
+  flex: 1;
 }
 
 </style>
